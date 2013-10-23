@@ -6,6 +6,9 @@ import javax.swing.JPanel;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+
+
 import java.io.File;
 /**
  * This class defines the ball used to destroy bricks
@@ -14,99 +17,135 @@ import java.io.File;
  **/
 public class Ball extends JPanel
 {
-    // TODO (FIXED) move this couple of int in a class named Position
 
     /**
-     * It is the future position of the ball
-     */
-    private Position positionLeftTopCorner;
-    
-    private Position positionLeftBottomCorner;
-    
-    private Position positionRightTopCorner;
-    
-    private Position positionRightBottomCorner;
-    
-    
-    /**
-     * a is the director coefficient of the ball's trajectory (y=ax+b)
-     */
-    private float a;
-    
-    /**
-     * b from (y=ax+b)
-     */
-    private float b;
-    
-    /**
-     * Size of the container where we play
+     * Size of a ball
      */
     public final static int BALL_SIZE = 10;
 
-   // private  E llipse2D.Double circle;
-    
+    // TODO (think about it) consider gathering the 4 positions in a single
+    // object called BoundingBox
     /**
-     * It create a ball at position (x,y)
+     * It is the top left corner position of the ball
      */
-   
-   
+    private Position topLeftCornerPosition;
+    /**
+     * It is the Bottom left corner position of the ball
+     */
+    private Position bottomLeftCornerPosition;
+    /**
+     * It is the top right corner position of the ball
+     */
+    private Position topRightCornerPosition;
+    /**
+     * It is the bottom right corner position of the ball
+     */
+    private Position bottomRightCornerPosition;
+
+    // TODO (think about it) consider gathering a and b in a single object
+    /**
+     * The ball's trajectory
+     */
+    private Trajectory trajectory;
+
+    /**
+     * Creates a new ball at new position (x,y) and set fields a and b to 1
+     */
     public Ball(float x, float y)
     {
         super();
-        this.positionLeftTopCorner = new Position(x,y);
-        this.positionLeftBottomCorner = new Position(x,y+Ball.BALL_SIZE);
-        this.positionRightTopCorner = new Position(x+Ball.BALL_SIZE,y);
-        this.positionRightBottomCorner = new Position(x+Ball.BALL_SIZE,y+Ball.BALL_SIZE);
-        this.a=1;
-        this.b=1;
-        //circle = new Ellipse2D.Float(x, y, 10, 10);
-    }
-    
-    
-    public Position getPositionLeftTopCorner()
-    {
-        return this.positionLeftTopCorner; 
-    }
-    public Position getPositionLeftBottomCorner() {
-		return positionLeftBottomCorner;
-	}
-
-	public Position getPositionRightTopCorner() {
-		return positionRightTopCorner;
-	}
-
-	public Position getPositionRightBottomCorner() {
-		return positionRightBottomCorner;
-	}
-
-	public void setPositionBall(float x, float d)
-    {
-        
-        this.positionLeftTopCorner = new Position(x,d);
-        this.positionLeftBottomCorner = new Position(x,d+Ball.BALL_SIZE);
-        this.positionRightTopCorner = new Position(x+Ball.BALL_SIZE,d);
-        this.positionRightBottomCorner = new Position(x+Ball.BALL_SIZE,d+Ball.BALL_SIZE);
-        
-    }
-    
-    public float getA()
-    {
-        return a;
+        this.topLeftCornerPosition = new Position(x, y);
+        this.bottomLeftCornerPosition = new Position(x, y + Ball.BALL_SIZE);
+        this.topRightCornerPosition = new Position(x + Ball.BALL_SIZE, y);
+        this.bottomRightCornerPosition = new Position(x + Ball.BALL_SIZE, y + Ball.BALL_SIZE);
+        this.trajectory = new Trajectory(1,1);
     }
 
-    public void setA(float valeur)
+
+    /**
+     * Return the ball's top left corner position
+     * 
+     * @return position
+     */
+    public Position getTopLeftCornerPosition()
     {
-        this.a = valeur;
+        return this.topLeftCornerPosition;
     }
 
-    public float getB()
+    /**
+     * Return the ball's bottom left corner position
+     * 
+     * @return position
+     */
+    public Position getBottomLeftCornerPosition()
     {
-        return b;
+        return this.bottomLeftCornerPosition;
     }
 
-    public void setB(float b)
+    /**
+     * Return the ball's top right corner position
+     * 
+     * @return position
+     */
+    public Position getTopRightCornerPosition()
     {
-        this.b = b;
+        return this.topRightCornerPosition;
+    }
+
+    /**
+     * Return the ball's bottom right corner position
+     * 
+     * @return position
+     */
+    public Position getBottomRightCornerPosition()
+    {
+        return this.bottomRightCornerPosition;
+    }
+
+    /**
+     * Set the four corner's position according to x,d and the baal size
+     * 
+     * @param x
+     * @param y
+     */
+    // TODO (fix) consider having a single position as parameter
+    public void setPositionsFromTopLeftCorner(float x, float y)
+    {
+        this.topLeftCornerPosition  = new Position(x, y);
+        this.bottomLeftCornerPosition = new Position(x, y + Ball.BALL_SIZE);
+        this.topRightCornerPosition = new Position(x + Ball.BALL_SIZE, y);
+        this.bottomRightCornerPosition = new Position(x + Ball.BALL_SIZE, y + Ball.BALL_SIZE);
+    }
+
+    /**
+     * Return a
+     * 
+     * @return a
+     */
+    public Trajectory getTrajectory()
+    {
+        return this.trajectory;
+    }
+
+    /**
+     * Set a field
+     * 
+     * @param a
+     */
+    public void setTrajectory(Trajectory a)
+    {
+        this.trajectory = a;
+    }
+
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        return "{" + this.topLeftCornerPosition.toString() + ", " + this.trajectory.toString() + "}";
     }
     
 public void renderBall(Graphics g){
@@ -121,7 +160,7 @@ public void renderBall(Graphics g){
         
         Graphics2D g2d = (Graphics2D)g; //le cast
         AffineTransform xform = new AffineTransform();
-        xform.setToTranslation(this.positionLeftTopCorner.getPosX(), this.positionLeftTopCorner.getPosY());
+        xform.setToTranslation(this.topLeftCornerPosition.getPosX(), this.topLeftCornerPosition.getPosY());
 		Image img = null;
 			try {
 				img = ImageIO.read(new File("balle.jpg"));

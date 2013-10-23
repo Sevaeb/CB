@@ -5,6 +5,8 @@ import javax.swing.JPanel;
 
 
 
+
+
 // TODO (fixed)(think about it) for plate, you mean "paddle" ?
 /**
  * This class define what is a plate 
@@ -13,87 +15,100 @@ import javax.swing.JPanel;
  */
 public class paddle extends JPanel
 {
- // TODO (fixed) move this couple of int in a class named Position
-    
-    /**
-     * position on the paddle
+	/**
+     * Width size of the paddle (in pixels)
      */
-    private Position paddlePosition;
+    public final static int PADDLE_SIZE = 30;
 
-    public final static int initialYPosition = 396;
-    
+    // TODO (fixed) comply with naming conventions
     /**
-     *  Width size of the paddle (in pixels)
+     * The paddle is always at the same height : 396
      */
-    private int size;
-    
+    public static final int INITIAL_Y_POSITION = 396;
+
     /**
      * Width size of the paddle (in pixels)
      */
-    public final static int paddle_SIZE = 50;
+    private int size;
 
-    public final static int PADDLE_SIZE = 50;
-    
-    // TODO (fixed) write a comment
+    /**
+     * Position of top left corner of the paddle, in fact only the x will change with the mouse's position
+     */
+    // TODO (explain) what is precisely this position?
+    private Position position;
+
     /**
      * That create a paddle with that we can play, X position can be specified
-     * @param f horizontal position of the paddle, vertical is constant
-     * @param size  width of the paddle
+     * 
+     * @param posX
+     *            horizontal position of the paddle, vertical is constant
+     * @param size
+     *            width of the paddle
      */
-    public paddle(float f, int size)
+    public paddle(float posX, int size)
     {
         super();
-        this.paddlePosition = new Position(f,this.initialYPosition);
+        this.position = new Position(posX, (float) paddle.INITIAL_Y_POSITION);
         this.size = size;
     }
 
     /**
      * That create a paddle with that we can play
      */
-    // TODO (fixed) write a comment
     public paddle()
     {
         super();
-        this.paddlePosition = new Position(0,this.initialYPosition);
-        // TODO (fixed) declare hard-coded value as a constant
-        this.size = this.paddle_SIZE; 
+        this.position = new Position(0, paddle.INITIAL_Y_POSITION);
+        this.size = paddle.PADDLE_SIZE;
     }
-
-    public Position getpaddlePosition()
-    {
-        return this.paddlePosition;
-    }
-    
 
     /**
+     * Return the paddle's position
+     * 
+     * @return position
+     */
+    public Position getPosition()
+    {
+        return this.position;
+    }
+    public void setPosition(Position pos)
+    {
+        this.position = pos;
+    }
+    /**
+     * Return the paddle's size
+     * 
      * @return give the size of paddle
      */
-    // TODO (fixed) write a comment
-    public int getSizePaddle()
+    public int getSize1()
     {
-        return size;
+        return this.size;
     }
-    
+
     /**
-     * @return set the size of paddle
+     * Set the paddle's size
+     * 
+     * @param size
      */
-    // TODO (fixed) write a comment
     public void setSize(int size)
     {
         this.size = size;
-    }   
+    }
     
-    public void setPosition(float a)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
     {
-    	this.paddlePosition = new Position(a, this.paddlePosition.getPosY());
-    	
+        return "{" + this.position.toString() + ", size : " + this.size + "}";
     }
     
     public void renderPaddle(Graphics g)
     {
-    	g.setColor(new Color(0.2F, 0.0F, 0.9F, 0.8F));
-    	g.fillRect((int)this.paddlePosition.getPosX(), (int)this.paddlePosition.getPosY(), PADDLE_SIZE, 10);
+    	g.setColor(Color.BLUE);
+    	g.fillRect((int)this.position.getPosX(), (int)this.position.getPosY(), this.PADDLE_SIZE, this.PADDLE_SIZE);
     
     }
-    
 }
