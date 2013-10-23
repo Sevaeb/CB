@@ -48,7 +48,7 @@ public class Game extends JPanel implements MouseMotionListener
     /**
      * Number that specify that there is no collision between ball and brick
      */
-    private static final int NO_SIDE_COLLISION = 1;
+    private static final int NO_SIDE_COLLISION = 0;
     
     /**
      * Number that specify a collision between the ball and the left or the right side of a brick
@@ -106,6 +106,7 @@ public class Game extends JPanel implements MouseMotionListener
     public Game()
     {
         super();
+   	 	addMouseMotionListener(this);
         int yPositionBricks = 44;
         this.stopGame = false;
         this.currentNumberOfBalls = Game.MAXIMAL_LIVES;
@@ -165,18 +166,18 @@ public class Game extends JPanel implements MouseMotionListener
                     {
                         collisionSide = isBallInCollisionWithBrick(j);
                         onCollisionWithBrick(thereWasAcollision,j,collisionSide);
-                        thereWasAcollision = true;
+                        if(collisionSide != 0)
+                        	thereWasAcollision = true;
                     }
                 }                
-                System.out.println(this.theBall.toString());
             }
             else
             {
                 
             }
-            
+            this.repaint();
             try {
-				Thread.currentThread().sleep(10);
+            	Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -195,7 +196,6 @@ public class Game extends JPanel implements MouseMotionListener
     {
         if (collisionSide != 0)
         {
-        	//System.out.println(this.bricks[indexOfBrick].toString());
             this.bricks[indexOfBrick].setState(Brick.DESTROYED_STATE);
             this.currentNumberOfBricks--;
             if (!thereWasAcollision)
@@ -228,8 +228,16 @@ public class Game extends JPanel implements MouseMotionListener
      */
     private void onLose()
     {
-        System.out.println("perdu");
-        this.stopGame = true;
+    	if(this.currentNumberOfBalls == 0)
+    	{
+	        System.out.println("perdu");
+	        this.stopGame = true;
+    	}
+        else
+        {
+        	this.currentNumberOfBalls--;
+        	this.theBall = new Ball(Game.PADDLE_INITIAL_POSITION , Game.PADDLE_INITIAL_POSITION);
+        }
     }
     
     // TODO (fixed) fix comment, return type is not a boolean
@@ -245,13 +253,13 @@ public class Game extends JPanel implements MouseMotionListener
      */
     private int isBallInCollisionWithBrick(int i)
     {
-        int res;
+        int res = 0;
         Position posBaLT = this.theBall.getTopLeftCornerPosition();
         Position posBaLB = this.theBall.getBottomLeftCornerPosition();
         Position posBaRT = this.theBall.getTopRightCornerPosition();
         Position posBaRB = this.theBall.getBottomRightCornerPosition();
 
-        if       (!this.bricks[i].isPositionInRect(posBaLT) && !this.bricks[i].isPositionInRect(posBaLB)
+        if(!this.bricks[i].isPositionInRect(posBaLT) && !this.bricks[i].isPositionInRect(posBaLB)
                 && (this.bricks[i].isPositionInRect(posBaRT) || this.bricks[i].isPositionInRect(posBaRB)))
         {
             res = Game.COLLISION_LEFT_RIGHT_SIDE;
@@ -374,7 +382,8 @@ public class Game extends JPanel implements MouseMotionListener
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		if(arg0.getX()+paddle.PADDLE_SIZE < this.WIDTH_OF_GAME_PANEL)
+		{
 		this.thePaddle.setPosition(new Position(arg0.getX(), this.thePaddle.getPosition().getPosY()));
-		
+		}
 	}
 }
