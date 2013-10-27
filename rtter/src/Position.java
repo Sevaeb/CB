@@ -45,6 +45,17 @@ public class Position
         return this.posY;
     }
     
+    /**
+     * Return a new position translated to deltaX ad deltaY
+     * @param deltaX
+     * @param deltaY
+     * @return a position translated to deltaX ad deltaY
+     */
+    public Position translate(float deltaX, float deltaY)
+    {
+    	return new Position(this.posX + deltaX, this.posY + deltaY);
+    }
+    
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */

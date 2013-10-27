@@ -3,6 +3,8 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 
+
+
 // TODO (fix) write a "real" comment 
 /**
  * 
@@ -14,15 +16,27 @@ import javax.swing.JPanel;
  */
 public class Brick extends JPanel
 {
+	
+	/**
+     * Ratio of Width size of the brick (in pixels)
+     */
+    public final static float RATIO_WIDTH = 0.05F;
+
+    /**
+     * Ration of Height size of the brick (in pixels)
+     */
+    public final static float RATIO_HEIGHT = 0.04F;
+    
+    
 	/**
      * Width size of the brick (in pixels)
      */
-    public final static int DEFAULT_WIDTH = 50;
+    public static int DEFAULT_WIDTH = (int)(BrickBreaker.getBrickBreakerWidthSize() * RATIO_WIDTH);
 
     /**
      * Height size of the brick (in pixels)
      */
-    public final static int DEFAULT_HEIGHT = 44;
+    public static int DEFAULT_HEIGHT = (int)(BrickBreaker.getBrickBreakerHeightSize() * RATIO_HEIGHT);
 
     /**
      * That is the normal state of a brick
@@ -55,6 +69,7 @@ public class Brick extends JPanel
      */
     private int state;
 
+    private CollisionBox brickBox;
     // TODO (fixed) finish writing comment
     /**
      * This is the initialization of a brick, a new position is created
@@ -69,8 +84,14 @@ public class Brick extends JPanel
         super();
         this.topLeftCornerPosition = new Position(posX, posY);
         this.state = Brick.NORMAL_STATE;
+        this.brickBox = new CollisionBox(this.topLeftCornerPosition, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
+    public CollisionBox getBrickBox()
+    {
+        return brickBox;
+    }
+    
     /**
      * @see java.lang.Object#toString()
      */
@@ -121,11 +142,7 @@ public class Brick extends JPanel
      *            Ball's position
      * @return true if the position is in, false otherwise
      */
-    public boolean isPositionInRect(Position posBall)
-    {
-        return (isFloatBetween(posBall.getPosX(), this.topLeftCornerPosition.getPosX(), this.topLeftCornerPosition.getPosX() + this.DEFAULT_WIDTH) && isFloatBetween(
-                posBall.getPosY(), this.topLeftCornerPosition.getPosY(), this.topLeftCornerPosition.getPosY() + this.DEFAULT_HEIGHT));
-    }
+
     
     /**
      * Function who say if the number toCompare is between the number a and the
@@ -139,15 +156,15 @@ public class Brick extends JPanel
      *            Bound of comparison
      * @return true if the number is in, false otherwise
      */
-    private boolean isFloatBetween(float toCompare, float a, float b)
-    {
-        return (toCompare >= a && toCompare <= b) || (toCompare >= b && toCompare <= a);
-    }
+
     
     public void renderBrick(Graphics g)
     {
-    	g.setColor(Color.BLUE);
+    	g.setColor(Color.BLACK);
     	g.fillRect((int)this.topLeftCornerPosition.getPosX(), (int)this.topLeftCornerPosition.getPosY(), this.DEFAULT_WIDTH, this.DEFAULT_HEIGHT);
+    	
+    	g.setColor(Color.BLUE);
+    	g.fillRect((int)this.topLeftCornerPosition.getPosX() + this.DEFAULT_WIDTH/15, (int)this.topLeftCornerPosition.getPosY()+this.DEFAULT_HEIGHT/15, 14*this.DEFAULT_WIDTH/15, 14*this.DEFAULT_HEIGHT/15);
     
     }
     public void renderBrickDestroyed(Graphics g)
@@ -156,6 +173,5 @@ public class Brick extends JPanel
     	g.fillRect((int)this.topLeftCornerPosition.getPosX(), (int)this.topLeftCornerPosition.getPosY(), this.DEFAULT_WIDTH, this.DEFAULT_HEIGHT);
     
     }
-    
-
+   
 }

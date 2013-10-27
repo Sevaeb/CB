@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 
 
+
 // TODO (fixed)(think about it) for plate, you mean "paddle" ?
 /**
  * This class define what is a plate 
@@ -15,22 +16,38 @@ import javax.swing.JPanel;
  */
 public class paddle extends JPanel
 {
-	/**
+    /**
+     * Ratio Width size of the paddle
+     */
+    private static final float RATIO_PADDLE_SIZE = 0.2F;
+    
+    /**
+     * Ratio of the vertical position of paddle 
+     */
+    private static final float RATIO_VERTICAL_POSITION = 0.85F;
+    
+    /**
      * Width size of the paddle (in pixels)
      */
-    public final static int PADDLE_SIZE = 30;
-
-    // TODO (fixed) comply with naming conventions
+    public static int DEFAULT_PADDLE_SIZE = (int)(BrickBreaker.getBrickBreakerWidthSize() * RATIO_PADDLE_SIZE);
+    
     /**
-     * The paddle is always at the same height : 396
+     * Height size of the paddle (in pixels)
      */
-    public static final int INITIAL_Y_POSITION = 396;
+    public final static int DEFAULT_PADDLE_HEIGHT = 10;
+    
+    /**
+     * The paddle is always at the same height
+     */
+    public static final int INITIAL_Y_POSITION = (int)(BrickBreaker.getBrickBreakerHeightSize() * RATIO_VERTICAL_POSITION);
 
     /**
      * Width size of the paddle (in pixels)
      */
-    private int size;
+    private int sizePaddle;
 
+    private CollisionBox paddleBox;
+    
     /**
      * Position of top left corner of the paddle, in fact only the x will change with the mouse's position
      */
@@ -49,7 +66,8 @@ public class paddle extends JPanel
     {
         super();
         this.position = new Position(posX, (float) paddle.INITIAL_Y_POSITION);
-        this.size = size;
+        this.sizePaddle = size;
+        this.paddleBox = new CollisionBox(this.position, paddle.DEFAULT_PADDLE_SIZE, paddle.DEFAULT_PADDLE_SIZE);
     }
 
     /**
@@ -59,9 +77,12 @@ public class paddle extends JPanel
     {
         super();
         this.position = new Position(0, paddle.INITIAL_Y_POSITION);
-        this.size = paddle.PADDLE_SIZE;
+        this.sizePaddle = paddle.DEFAULT_PADDLE_SIZE;
+        this.paddleBox = new CollisionBox(this.position, paddle.DEFAULT_PADDLE_SIZE, paddle.DEFAULT_PADDLE_SIZE);
     }
 
+    
+    
     /**
      * Return the paddle's position
      * 
@@ -74,15 +95,16 @@ public class paddle extends JPanel
     public void setPosition(Position pos)
     {
         this.position = pos;
+        this.paddleBox = new CollisionBox(this.position, paddle.DEFAULT_PADDLE_SIZE, paddle.DEFAULT_PADDLE_SIZE);
     }
     /**
      * Return the paddle's size
      * 
      * @return give the size of paddle
      */
-    public int getSize1()
+    public int getSizePaddle()
     {
-        return this.size;
+        return this.sizePaddle;
     }
 
     /**
@@ -90,25 +112,29 @@ public class paddle extends JPanel
      * 
      * @param size
      */
-    public void setSize(int size)
+    public void setSizePaddle(int size)
     {
-        this.size = size;
+        this.sizePaddle = size;
     }
     
-    /*
+    public CollisionBox getPaddleBox() {
+		return paddleBox;
+	}
+
+	/*
      * (non-Javadoc)
      * 
      * @see java.lang.Object#toString()
      */
     public String toString()
     {
-        return "{" + this.position.toString() + ", size : " + this.size + "}";
+        return "{" + this.position.toString() + ", size : " + this.sizePaddle + "}";
     }
     
     public void renderPaddle(Graphics g)
     {
     	g.setColor(Color.BLUE);
-    	g.fillRect((int)this.position.getPosX(), (int)this.position.getPosY(), this.PADDLE_SIZE, this.PADDLE_SIZE);
+    	g.fillRect((int)this.position.getPosX(), (int)this.position.getPosY(), this.sizePaddle, this.sizePaddle/5);
     
     }
 }
